@@ -7,13 +7,18 @@
         {{ actualStep.time }}
       </div>
       <span class="main__rounds">{{ actualRound }}/{{ rounds }} rounds</span>
-      <button @click="setActualStep(steps.longBreak)">change</button>
+      <vue-doro-actions
+        @skipStep="setNextStep"
+        @toggleIsPlaying="setIsPlaying"
+        @setAdjustments="setSteps"
+      />
     </main>
   </div>
 </template>
 
 <script>
 import AppHeader from '@/components/AppHeader'
+import VueDoroActions from '@/components/VueDoroActions'
 import timer from '@/enums/timer'
 
 const {
@@ -26,6 +31,7 @@ const {
 export default {
   components: {
     AppHeader,
+    VueDoroActions,
   },
   data() {
     return {
@@ -62,8 +68,17 @@ export default {
     },
   },
   methods: {
+    setSteps(adjustments) {
+      console.log(adjustments)
+    },
     setActualStep(value) {
       this.actualStep = value
+    },
+    setNextStep() {
+      console.log('chamou skip')
+    },
+    setIsPlaying(value) {
+      console.log('chamou is playing', value)
     },
   },
 }
