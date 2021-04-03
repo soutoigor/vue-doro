@@ -6,12 +6,13 @@
       <vue-doro-timer
         :timer="actualStep.time"
         :is-playing="isPlaying"
+        @timeFinished="setNextStep"
       />
       <span class="main__rounds">{{ actualRound }}/{{ rounds }} rounds</span>
       <vue-doro-actions
         @skipStep="setNextStep"
         @toggleIsPlaying="setIsPlaying"
-        @setAdjustments="setSteps"
+        @setAdjustments="setAdjustments"
       />
     </main>
   </div>
@@ -76,10 +77,35 @@ export default {
       this.actualStep = value
     },
     setNextStep() {
-      console.log('chamou skip')
+      const { title } = this.actualStep
+      if (title === LONG.LABEL) {
+        this.setActualRound(1)
+        this.setActualStep(this.steps.focus)
+      } else if (title === FOCUS.LABEL && this.actualRound === this.rounds) {
+        this.setActualStep(this.steps.longBreak)
+      } else if (title === FOCUS.LABEL && this.actualRound !== this.rounds) {
+        this.setActualStep(this.steps.shortBreak)
+      } else if (title === SHORT.LABEL && this.actualRound !== this.rounds) {
+        this.setActualStep(this.steps.focus)
+        this.setActualRound(this.actualRound + 1)
+      }
     },
     setIsPlaying(isPlaying) {
       this.isPlaying = isPlaying
+    },
+    setActualRound(value) {
+      this.actualRound = value
+    },
+    setAdjustments(adjustments) {
+      Object.entries(adjustments).forEach(([key, value]) => {
+        if (key === 'rounds') {
+          this.rounds = +value
+        } else {
+          this.steps[key].time = value
+        }
+      })
+      this.setActualRound(1)
+      this.setActualStep(this.steps.focus)
     },
   },
 }

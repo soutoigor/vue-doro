@@ -96,7 +96,6 @@ export default {
       if (width > 450) {
         this.timerDiameter = 400
       }
-      console.log(this.timerDiameter)
     },
     changePageTitle(value) {
       document.title = value
