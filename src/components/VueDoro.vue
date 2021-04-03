@@ -3,9 +3,10 @@
     <app-header />
     <main class="page__main">
       <h2 class="main__step-title">{{ actualStep.title }}</h2>
-      <div class="main__timer">
-        {{ actualStep.time }}
-      </div>
+      <vue-doro-timer
+        :timer="actualStep.time"
+        :is-playing="isPlaying"
+      />
       <span class="main__rounds">{{ actualRound }}/{{ rounds }} rounds</span>
       <vue-doro-actions
         @skipStep="setNextStep"
@@ -19,6 +20,7 @@
 <script>
 import AppHeader from '@/components/AppHeader'
 import VueDoroActions from '@/components/VueDoroActions'
+import VueDoroTimer from '@/components/VueDoroTimer'
 import timer from '@/enums/timer'
 
 const {
@@ -32,12 +34,14 @@ export default {
   components: {
     AppHeader,
     VueDoroActions,
+    VueDoroTimer,
   },
   data() {
     return {
       actualRound: 1,
       rounds: ROUNDS,
       actualStep: null,
+      isPlaying: false,
       steps: {
         focus: {
           title: FOCUS.LABEL,
@@ -68,17 +72,14 @@ export default {
     },
   },
   methods: {
-    setSteps(adjustments) {
-      console.log(adjustments)
-    },
     setActualStep(value) {
       this.actualStep = value
     },
     setNextStep() {
       console.log('chamou skip')
     },
-    setIsPlaying(value) {
-      console.log('chamou is playing', value)
+    setIsPlaying(isPlaying) {
+      this.isPlaying = isPlaying
     },
   },
 }
@@ -119,9 +120,6 @@ pageStatusGradient(endColor)
   font-weight 400
   @media screen and (max-width $mobile)
     font-size 1.7rem
-
-.main__timer
-  font-size 6rem
 
 .main__rounds
   letter-spacing .1rem
